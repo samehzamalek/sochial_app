@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "892943872424",
+    "project_id": "sochial-app-ef759",
+    "storage_bucket": "sochial-app-ef759.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892943872424:android:4ab6e2d516831dba2b2d9d",
+        "android_client_info": {
+          "package_name": "com.example.sochial_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892943872424-09hvli8baf3ebs3a180h0s7s4butklbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzdNldxuzA_EZqR_TGHOlzK2IxrbsZSks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892943872424-09hvli8baf3ebs3a180h0s7s4butklbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
