@@ -44,7 +44,8 @@ dependencies:
   shared_preferences: ^2.0.6
   flutter_conditional_rendering: ^2.0.0
   image_picker: ^0.8.4+3
-
+  firebase_storage: ^10.0.5
+  firebase_messaging: ^10.0.9
 dev_dependencies:
   flutter_test:
     sdk: flutter

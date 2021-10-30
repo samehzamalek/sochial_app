@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_conditional_rendering/conditional.dart';
+import 'package:sochial_app/cubit/cubit.dart';
+import 'package:sochial_app/cubit/states.dart';
+import 'package:sochial_app/model/post_model.dart';
+import 'package:sochial_app/modules/comment.dart';
+import 'package:sochial_app/shared/constant.dart';
 import 'package:sochial_app/shared/icon_broken.dart';
 
 class FeedsScreen extends StatelessWidget {
@@ -6,68 +13,133 @@ class FeedsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          Card(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            elevation: 5,
-            margin: const EdgeInsets.all(8),
-            child: Stack(
-              alignment: AlignmentDirectional.bottomEnd,
+    return BlocConsumer<SocialCubit,SocialStates>(
+      listener: (context,state){},
+      builder: (context,state){
+
+        return
+          SocialCubit.get(context).posts!.length > 0   ?
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
               children: [
-                const Image(
-                  image: NetworkImage(
-                      'https://image.shutterstock.com/image-photo/female-runner-medal-celebrating-victory-600w-1760783186.jpg'),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'communicate with friends',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1!
-                        .copyWith(color: Colors.white),
+                Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 5,
+                  margin: const EdgeInsets.all(8),
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    children: [
+                      const Image(
+                        image: NetworkImage(
+                            'https://image.shutterstock.com/image-photo/female-runner-medal-celebrating-victory-600w-1760783186.jpg'),
+                        fit: BoxFit.cover,
+                        height: 200,
+                        width: double.infinity,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'communicate with friends',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1!
+                              .copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics:const NeverScrollableScrollPhysics() ,
+                  itemBuilder: (context, index) => buildPostItem(SocialCubit.get(context).posts![index],context,index),
+                  itemCount: SocialCubit.get(context).posts!.length,
+                  separatorBuilder: (BuildContext context, int index)=>const SizedBox(
+                    height: 8,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                )
               ],
             ),
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics:const NeverScrollableScrollPhysics() ,
-            itemBuilder: (context, index) => buildPostItem(context),
-            itemCount: 10,
-            separatorBuilder: (BuildContext context, int index)=>const SizedBox(
-              height: 8,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          )
-        ],
-      ),
+          ):
+          const Center(child: CircularProgressIndicator());
+        //   Conditional.single(context: context,
+        //     conditionBuilder: SocialCubit.get(context).posts.length > 0,
+        //     widgetBuilder: (context){
+        //
+        //     return  SingleChildScrollView(
+        //         physics: const BouncingScrollPhysics(),
+        //         child: Column(
+        //           children: [
+        //             Card(
+        //               clipBehavior: Clip.antiAliasWithSaveLayer,
+        //               elevation: 5,
+        //               margin: const EdgeInsets.all(8),
+        //               child: Stack(
+        //                 alignment: AlignmentDirectional.bottomEnd,
+        //                 children: [
+        //                   const Image(
+        //                     image: NetworkImage(
+        //                         'https://image.shutterstock.com/image-photo/female-runner-medal-celebrating-victory-600w-1760783186.jpg'),
+        //                     fit: BoxFit.cover,
+        //                     height: 200,
+        //                     width: double.infinity,
+        //                   ),
+        //                   Padding(
+        //                     padding: const EdgeInsets.all(8.0),
+        //                     child: Text(
+        //                       'communicate with friends',
+        //                       style: Theme.of(context)
+        //                           .textTheme
+        //                           .subtitle1!
+        //                           .copyWith(color: Colors.white),
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             ListView.separated(
+        //               shrinkWrap: true,
+        //               physics:const NeverScrollableScrollPhysics() ,
+        //               itemBuilder: (context, index) => buildPostItem(context),
+        //               itemCount: 10,
+        //               separatorBuilder: (BuildContext context, int index)=>const SizedBox(
+        //                 height: 8,
+        //               ),
+        //             ),
+        //             const SizedBox(
+        //               height: 8,
+        //             )
+        //           ],
+        //         ),
+        //       );
+        //     },
+        //     fallbackBuilder: (context)=>const Center(child: CircularProgressIndicator())
+        // );
+      },
+
+
     );
   }
 
-  Widget buildPostItem(context) => Card(
+  Widget buildPostItem(PostModel model,context,index) => Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 5,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                  CircleAvatar(
                   radius: 25,
                   backgroundImage: NetworkImage(
-                      'https://image.shutterstock.com/image-photo/professional-female-soccer-players-celebrating-600w-1797492769.jpg'),
+                      '${model.image}'),
                 ),
                 const SizedBox(
                   width: 15,
@@ -77,12 +149,12 @@ class FeedsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: const [
-                          Text('sameh ali'),
-                          SizedBox(
+                        children:   [
+                          Text('${model.name}'),
+                          const SizedBox(
                             width: 5,
                           ),
-                          Icon(
+                          const Icon(
                             Icons.check_circle,
                             color: Colors.blue,
                             size: 16,
@@ -90,7 +162,7 @@ class FeedsScreen extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        'January 21,2021 at 11:00 pm',
+                        '${model.dateTime}',
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -110,9 +182,9 @@ class FeedsScreen extends StatelessWidget {
                 color: Colors.grey[300],
               ),
             ),
-            const Text(
-              'Professional female soccer players celebrating a victory on a sports arena. Group of woman football players screaming and punch air after winning the championship on sports field.',
-              style: TextStyle(height: 1.2),
+              Text(
+              ' ${model.text}',
+              style: const TextStyle(height: 1.2),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 10, top: 5),
@@ -178,16 +250,20 @@ class FeedsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-                height: 140,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://image.shutterstock.com/image-photo/female-runner-medal-celebrating-victory-600w-1760783186.jpg'),
-                      fit: BoxFit.cover,
-                    ))),
+            if(model.postImage != '')
+            Padding(
+              padding: const EdgeInsetsDirectional.only(top: 15.0),
+              child: Container(
+                  height: 140,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      image:   DecorationImage(
+                        image: NetworkImage(
+                            '${model.postImage}'),
+                        fit: BoxFit.cover,
+                      ))),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Row(
@@ -206,13 +282,15 @@ class FeedsScreen extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              '1200',
+                              '${SocialCubit.get(context).likes![index]}',
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+
+                      },
                     ),
                   ),
                   Expanded(
@@ -230,7 +308,7 @@ class FeedsScreen extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              '1200 comment',
+                              '0 comment',
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -256,10 +334,10 @@ class FeedsScreen extends StatelessWidget {
                   child: InkWell(
                     child: Row(
                       children: [
-                        const CircleAvatar(
+                          CircleAvatar(
                           radius: 18,
                           backgroundImage: NetworkImage(
-                              'https://image.shutterstock.com/image-photo/professional-female-soccer-players-celebrating-600w-1797492769.jpg'),
+                              '${SocialCubit.get(context).userModel!.image}'),
                         ),
                         const SizedBox(
                           width: 15,
@@ -270,7 +348,12 @@ class FeedsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return CommentScreen();
+                      }));
+                     // navigateTo(context,CommentScreen());
+                    },
                   ),
                 ),
                 InkWell(
@@ -289,7 +372,9 @@ class FeedsScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    SocialCubit.get(context).likePost(SocialCubit.get(context).postsId![index]);
+                  },
                 )
               ],
             )

@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: 190,
+                height: 220,
                 child: Stack(
                   alignment:AlignmentDirectional.bottomCenter ,
                   children: [
@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
                       alignment:AlignmentDirectional.topCenter ,
 
                       child: Container(
-                          height: 140,
+                          height: 180,
                           width: double.infinity,
                           decoration:   BoxDecoration(
                               borderRadius: const BorderRadius.only(topLeft:Radius.circular(4.0),topRight:Radius.circular(4.0)),
